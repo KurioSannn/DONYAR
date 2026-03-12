@@ -1,78 +1,86 @@
 "use client"
 
 import { useState } from "react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
-const QUICK_AMOUNTS = [10000, 25000, 50000, 100000]
 const MAYAR_LINK = "https://cleo-firman.myr.id/pl/donasi-donyar"
+const QUICK_AMOUNTS = [10000, 25000, 50000, 100000, 250000, 500000]
 
 export default function DonateForm({ campaignId }: { campaignId: string }) {
+  const { data: session } = useSession()
+  const router = useRouter()
   const [amount, setAmount] = useState("")
+  const [donating, setDonating] = useState(false)
 
-  const handleDonate = () => {
-    if (!amount || Number(amount) <= 0) {
-      alert("Masukkan jumlah donasi dulu ya!")
-      return
-    }
-    // Redirect ke Mayar dengan amount sebagai parameter
-    const url = `${MAYAR_LINK}?amount=${amount}`
-    window.open(url, "_blank")
+  const handleDonate = async () => {
+    const num = parseInt(amount)
+    if (!num || num < 1000) { alert("Minimal donasi Rp 1.000"); return }
+    if (!session) { router.push("/login"); return }
+
+    setDonating(true)
+    await fetch("/api/donation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ campaignId, amount: num, userId: session.user.id }),
+    })
+    window.location.href = `${MAYAR_LINK}?amount=${num}`
   }
 
+  const num = parseInt(amount)
+  const valid = num >= 1000
+
   return (
-    <div className="bg-yellow-50 border border-yellow-100 p-5 rounded-2xl">
-
-      <h2 className="text-lg font-bold text-yellow-700">
-        💛 Donasi Sekarang
-      </h2>
-
-      <p className="text-xs text-gray-400 mt-1">
-        Pembayaran aman via Mayar 🔒
-      </p>
-
-      {/* NOMINAL CEPAT */}
-      <div className="grid grid-cols-4 gap-2 mt-4">
-        {QUICK_AMOUNTS.map((nominal) => (
-          <button
-            key={nominal}
-            onClick={() => setAmount(String(nominal))}
-            className={`text-xs py-2 rounded-xl font-semibold border transition-all ${
-              amount === String(nominal)
-                ? "bg-yellow-400 border-yellow-400 text-white"
-                : "bg-white border-yellow-200 text-yellow-700 hover:bg-yellow-100"
-            }`}
-          >
-            {nominal >= 1000 ? `${nominal / 1000}rb` : nominal}
-          </button>
-        ))}
+    <div className="flex flex-col gap-3">
+      {/* QUICK AMOUNTS */}
+      <div className="grid grid-cols-3 gap-2">
+        {QUICK_AMOUNTS.map((q) => {
+          const selected = amount === q.toString()
+          return (
+            <button key={q} onClick={() => setAmount(q.toString())}
+              className={`py-3 rounded-2xl text-xs font-bold transition-all active:scale-95 ${
+                selected ? "text-white shadow-lg" : "bg-gray-50 text-gray-600 border border-gray-200"
+              }`}
+              style={selected ? { background: "linear-gradient(135deg, #22c55e, #16a34a)" } : {}}>
+              {q >= 1000000 ? `${q/1000000}jt` : `${q/1000}rb`}
+            </button>
+          )
+        })}
       </div>
 
-      {/* INPUT MANUAL */}
-      <input
-        type="number"
-        placeholder="Atau masukkan nominal lain..."
-        className="mt-3 w-full border  text-gray-500 border-yellow-200 bg-white p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
+      {/* CUSTOM INPUT */}
+      <div className={`rounded-2xl px-4 py-3 flex items-center gap-2 border transition-all ${
+        amount && !QUICK_AMOUNTS.map(String).includes(amount) && valid
+          ? "border-green-400 bg-green-50"
+          : "border-gray-200 bg-gray-50"
+      }`}>
+        <span className="text-gray-500 text-sm font-bold">Rp</span>
+        <input
+          type="number"
+          placeholder="Nominal lainnya..."
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700"
+        />
+        {valid && <span className="text-green-500 text-xs font-bold">✓</span>}
+      </div>
 
-      {amount && (
-        <p className="text-xs text-gray-500 mt-1 ml-1">
-          Rp {Number(amount).toLocaleString("id-ID")}
-        </p>
+      {/* PREVIEW */}
+      {valid && (
+        <div className="bg-green-50 border border-green-100 rounded-2xl px-4 py-2.5 flex justify-between items-center">
+          <span className="text-green-700 text-xs">Jumlah donasi</span>
+          <span className="text-green-600 font-bold text-sm">Rp {num.toLocaleString("id-ID")}</span>
+        </div>
       )}
 
-      <button
-        onClick={handleDonate}
-        className="mt-4 w-full bg-green-500 hover:bg-green-600 active:scale-95 transition-all text-white py-3 rounded-xl font-bold shadow-sm flex items-center justify-center gap-2"
-      >
-        <span>Donasi via Mayar</span>
-        <span>→</span>
+      {/* BUTTON */}
+      <button onClick={handleDonate} disabled={donating || !valid}
+        className="w-full py-4 rounded-2xl font-bold text-white text-sm shadow-lg active:scale-95 transition-all mt-1 disabled:opacity-50"
+        style={{ background: valid ? "linear-gradient(135deg, #f59e0b, #d97706)" : "#d1d5db" }}>
+        {donating ? "Memproses..." : valid
+          ? `💝 Donasi Rp ${num.toLocaleString("id-ID")} via Mayar`
+          : "Pilih nominal dulu"}
       </button>
-
-      <p className="text-center text-xs text-gray-400 mt-2">
-        Kamu akan diarahkan ke halaman pembayaran Mayar
-      </p>
-
     </div>
   )
 }
