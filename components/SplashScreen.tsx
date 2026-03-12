@@ -4,35 +4,44 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter, usePathname } from "next/navigation"
 
+const SPLASH_KEY = "donyar_splashed"
+
 export default function SplashScreen({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [fadeOut, setFadeOut] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
   const pathname = usePathname()
 
-  // Halaman yang gak perlu login
   const publicPages = ["/login", "/register"]
   const isPublicPage = publicPages.includes(pathname)
 
   useEffect(() => {
-    if (status === "loading") return // tunggu session dicek dulu
+    if (isPublicPage) return
+    if (status === "loading") return
 
-    const fadeTimer = setTimeout(() => setFadeOut(true), 1800)
-    const loadTimer = setTimeout(() => {
-      setLoading(false)
-      if (!session && !isPublicPage) {
-        router.push("/login") // belum login → ke login
+    // Cek apakah splash sudah pernah ditampilkan
+    const alreadySplashed = sessionStorage.getItem(SPLASH_KEY)
+
+    if (!alreadySplashed) {
+      setLoading(true)
+      sessionStorage.setItem(SPLASH_KEY, "true")
+
+      const fadeTimer = setTimeout(() => setFadeOut(true), 1800)
+      const loadTimer = setTimeout(() => {
+        setLoading(false)
+        if (!session) router.push("/login")
+      }, 2300)
+
+      return () => {
+        clearTimeout(fadeTimer)
+        clearTimeout(loadTimer)
       }
-    }, 2300)
-
-    return () => {
-      clearTimeout(fadeTimer)
-      clearTimeout(loadTimer)
+    } else {
+      if (!session) router.push("/login")
     }
-  }, [status, session, router, isPublicPage])
+  }, [status, session, isPublicPage])
 
-  // Kalau di halaman login/register, langsung tampil tanpa splash
   if (isPublicPage) return <>{children}</>
 
   if (loading) {
@@ -46,12 +55,10 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
             <span className="text-5xl">🌿</span>
           </div>
         </div>
-
         <div className="animate-pulse text-center">
           <h1 className="text-4xl font-bold text-green-600 tracking-widest">DONYAR</h1>
           <p className="text-gray-400 text-sm mt-1 tracking-wide">Smart Donation Platform</p>
         </div>
-
         <div className="flex gap-1 mt-4">
           {[0, 1, 2].map((i) => (
             <div
