@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title: "DONYAR - Smart Donation Platform",
   description: "Platform donasi cerdas powered by AI untuk Ramadhan 1447H",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   openGraph: {
     title: "DONYAR - Smart Donation Platform 🌙",
