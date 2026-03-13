@@ -64,12 +64,14 @@ export default function HomePage() {
             <p className="text-green-200 text-x+">{greeting} 👋</p>
             <p className="text-white font-bold text-3xl">{firstName}</p>
           </div>
+          <Link href="/about">
           <div className="flex items-center gap-2 bg-white border border-yellow-400 rounded-2xl px-3 py-2">
             <Image src="/LogoDonyar.svg" alt="DONYAR" width={22} height={22} />
             <span className="text-yellow-400 font-bold text-sm tracking-wider">
               DONYAR
             </span>
           </div>
+          </Link>
         </div>
 
         {/* HERO CARD */}
