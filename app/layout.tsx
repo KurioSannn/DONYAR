@@ -2,6 +2,7 @@ import { Poppins } from "next/font/google"
 import "./globals.css"
 import BottomNavbar from "@/components/BottomNavbar"
 import Providers from "@/components/Providers"
+import SplashScreen from "@/components/SplashScreen"
 import type { Metadata } from "next"
 
 const poppins = Poppins({
@@ -13,8 +14,8 @@ export const metadata: Metadata = {
   title: "DONYAR - Smart Donation Platform",
   description: "Platform donasi cerdas powered by AI untuk Ramadhan 1447H",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/LogoDonyar.svg",
+    apple: "/LogoDonyar.svg",
   },
   openGraph: {
     title: "DONYAR - Smart Donation Platform 🌙",
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
         <Providers>
-          {children}
+          <SplashScreen>
+            {children}
+          </SplashScreen>
           <BottomNavbar />
         </Providers>
       </body>
