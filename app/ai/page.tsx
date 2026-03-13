@@ -205,22 +205,22 @@ export default function AIPage() {
       </div>
 
       {/* INPUT */}
-      <div className="px-4 py-3 pb-28 bg-white/80 backdrop-blur-md border-t border-gray-100">
-        <div className="flex gap-2 items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2">
+      <div className="px-4 py-4 pb-28 bg-white/80 backdrop-blur-md border-t border-gray-100">
+        <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
             placeholder="Ketik pesan..."
-            className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700"
+            className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700 py-2"
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={loading || !input.trim()}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold disabled:opacity-40 transition-all active:scale-90"
+            className="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-lg font-bold disabled:opacity-40 transition-all active:scale-90 shrink-0"
             style={{ background: "linear-gradient(135deg, #22c55e, #16a34a)" }}
           >
-            →
+            ➤
           </button>
         </div>
       </div>
