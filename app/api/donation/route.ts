@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/lib/db"
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/db";
 
 // GET - ambil semua donasi
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get("userId")
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
 
   const donations = await prisma.donation.findMany({
     where: userId ? { userId } : {},
@@ -13,14 +13,14 @@ export async function GET(req: NextRequest) {
       user: true,
     },
     orderBy: { createdAt: "desc" },
-  })
+  });
 
-  return NextResponse.json(donations)
+  return NextResponse.json(donations);
 }
 
 // POST - buat donasi baru
 export async function POST(req: NextRequest) {
-  const { amount, userId, campaignId } = await req.json()
+  const { amount, userId, campaignId } = await req.json();
 
   // Buat donasi
   const donation = await prisma.donation.create({
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       campaignId,
       status: "pending",
     },
-  })
+  });
 
   // Update collectedAmount campaign
   await prisma.campaign.update({
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         increment: amount,
       },
     },
-  })
+  });
 
-  return NextResponse.json(donation)
+  return NextResponse.json(donation);
 }

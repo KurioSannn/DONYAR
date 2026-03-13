@@ -1,48 +1,52 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
-import { useRouter, usePathname } from "next/navigation"
-import Image from "next/image"
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 
-const SPLASH_KEY = "donyar_splashed"
+const SPLASH_KEY = "donyar_splashed";
 
-export default function SplashScreen({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(false)
-  const [fadeOut, setFadeOut] = useState(false)
-  const { data: session, status } = useSession()
-  const router = useRouter()
-  const pathname = usePathname()
+export default function SplashScreen({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const publicPages = ["/login", "/register"]
-  const isPublicPage = publicPages.includes(pathname)
+  const publicPages = ["/login", "/register"];
+  const isPublicPage = publicPages.includes(pathname);
 
   useEffect(() => {
-    if (isPublicPage) return
-    if (status === "loading") return
+    if (isPublicPage) return;
+    if (status === "loading") return;
 
-    const alreadySplashed = sessionStorage.getItem(SPLASH_KEY)
+    const alreadySplashed = sessionStorage.getItem(SPLASH_KEY);
 
     if (!alreadySplashed) {
-      setLoading(true)
-      sessionStorage.setItem(SPLASH_KEY, "true")
+      setLoading(true);
+      sessionStorage.setItem(SPLASH_KEY, "true");
 
-      const fadeTimer = setTimeout(() => setFadeOut(true), 1800)
+      const fadeTimer = setTimeout(() => setFadeOut(true), 1800);
       const loadTimer = setTimeout(() => {
-        setLoading(false)
-        if (!session) router.push("/login")
-      }, 2300)
+        setLoading(false);
+        if (!session) router.push("/login");
+      }, 2300);
 
       return () => {
-        clearTimeout(fadeTimer)
-        clearTimeout(loadTimer)
-      }
+        clearTimeout(fadeTimer);
+        clearTimeout(loadTimer);
+      };
     } else {
-      if (!session) router.push("/login")
+      if (!session) router.push("/login");
     }
-  }, [status, session, isPublicPage])
+  }, [status, session, isPublicPage]);
 
-  if (isPublicPage) return <>{children}</>
+  if (isPublicPage) return <>{children}</>;
 
   if (loading) {
     return (
@@ -50,7 +54,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
         className="flex h-screen flex-col items-center justify-center gap-6 transition-opacity duration-500"
         style={{
           opacity: fadeOut ? 0 : 1,
-          background: "linear-gradient(160deg, #1a6b1c 0%, #0d3d0e 100%)"
+          background: "linear-gradient(160deg, #1a6b1c 0%, #0d3d0e 100%)",
         }}
       >
         {/* LOGO */}
@@ -59,8 +63,12 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
             <Image src="/LogoDonyar.svg" alt="DONYAR" width={60} height={60} />
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white tracking-widest">DONYAR</h1>
-            <p className="text-green-300 text-sm mt-1 tracking-wide">Smart Donation Platform</p>
+            <h1 className="text-4xl font-bold text-white tracking-widest">
+              DONYAR
+            </h1>
+            <p className="text-green-300 text-sm mt-1 tracking-wide">
+              Smart Donation Platform
+            </p>
           </div>
         </div>
 
@@ -75,8 +83,8 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
           ))}
         </div>
       </div>
-    )
+    );
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
