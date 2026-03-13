@@ -16,6 +16,7 @@ export default function BottomNavbar() {
     { href: "/campaign", label: "Campaign", icon: "📋" },
     { href: "/riwayat", label: "Riwayat", icon: "📜" },
     { href: "/ai", label: "AI Chat", icon: "🤖" },
+    { href: "/about", label: "About", icon: "ℹ️" },
     { href: "/profile", label: "Profil", icon: "👤" },
     ...(session?.user?.role === "admin"
       ? [{ href: "/admin", label: "Admin", icon: "⚙️" }]

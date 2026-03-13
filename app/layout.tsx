@@ -1,7 +1,7 @@
 import { Poppins } from "next/font/google"
 import "./globals.css"
 import BottomNavbar from "@/components/BottomNavbar"
-import Providers from "@/components/Providers" // ✅ ganti import
+import Providers from "@/components/Providers"
 import type { Metadata } from "next"
 
 const poppins = Poppins({
@@ -11,14 +11,30 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "DONYAR - Smart Donation Platform",
-  description: "Platform donasi cerdas powered by AI",
+  description: "Platform donasi cerdas powered by AI untuk Ramadhan 1447H",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
+  openGraph: {
+    title: "DONYAR - Smart Donation Platform 🌙",
+    description: "Temukan campaign donasi terbaik dengan bantuan AI. Platform donasi cerdas untuk Ramadhan 1447H.",
+    url: "https://donyar.vercel.app",
+    siteName: "DONYAR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "DONYAR - Smart Donation Platform 🌙",
+    description: "Temukan campaign donasi terbaik dengan bantuan AI.",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
-        <Providers> {/* ✅ pakai Providers bukan SessionProvider langsung */}
+        <Providers>
           {children}
           <BottomNavbar />
         </Providers>

@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -38,7 +39,7 @@ export default function LoginPage() {
       className="min-h-screen flex flex-col"
       style={{ background: "#f8faf8" }}
     >
-      {/* TOP SECTION */}
+      {/* TOP */}
       <div
         className="flex flex-col items-center justify-center pt-16 pb-16 px-6 rounded-b-[48px]"
         style={{
@@ -75,22 +76,33 @@ export default function LoginPage() {
               placeholder="email@kamu.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent"
+              className="w-full text-gray-500 border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent"
             />
           </div>
+
           <div>
             <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
               Password
             </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              className="w-full border border-gray-200 bg-gray-50 rounded-2xl px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                className="w-full border text-gray-500 border-gray-200 bg-gray-50 rounded-2xl px-4 py-3.5 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-green-600 transition-colors"
+              >
+                {showPassword ? "HIDE" : "SHOW"}
+              </button>
+            </div>
           </div>
+
           <button
             onClick={handleLogin}
             disabled={loading}
