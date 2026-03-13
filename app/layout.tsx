@@ -25,7 +25,7 @@ openGraph: {
   type: "website",
   images: [
     {
-      url: "https://donyar.vercel.app/OGDonyar.webp",
+      url: "https://donyar.vercel.app/OGDonyar.png",
       width: 800,
       height: 800,
       alt: "DONYAR Logo",
