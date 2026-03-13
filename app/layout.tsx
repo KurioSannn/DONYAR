@@ -17,13 +17,21 @@ export const metadata: Metadata = {
     icon: "/LogoDonyar.svg",
     apple: "/LogoDonyar.svg",
   },
-  openGraph: {
-    title: "DONYAR - Smart Donation Platform 🌙",
-    description: "Temukan campaign donasi terbaik dengan bantuan AI. Platform donasi cerdas untuk Ramadhan 1447H.",
-    url: "https://donyar.vercel.app",
-    siteName: "DONYAR",
-    type: "website",
-  },
+openGraph: {
+  title: "DONYAR - Smart Donation Platform 🌙",
+  description: "Temukan campaign donasi terbaik dengan bantuan AI. Platform donasi cerdas untuk Ramadhan 1447H.",
+  url: "https://donyar.vercel.app",
+  siteName: "DONYAR",
+  type: "website",
+  images: [
+    {
+      url: "https://donyar.vercel.app/LogoDonyar.svg",
+      width: 800,
+      height: 800,
+      alt: "DONYAR Logo",
+    }
+  ],
+},
   twitter: {
     card: "summary",
     title: "DONYAR - Smart Donation Platform 🌙",
